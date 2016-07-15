@@ -48,13 +48,18 @@ describe JourneyLog do
   end
 
   describe '#fare' do
+    let(:start_st) { double(:entry_station) }
+    let(:end_st) { double(:exit_station) }
+
     it 'responds to fare' do
       expect(subject).to respond_to(:fare)
     end
 
     it 'returns a fare' do
-      subject.start_journey("asd")
-      subject.end_journey("asd")
+      allow(start_st).to receive(:zone).and_return(1)
+      allow(end_st).to receive(:zone).and_return(1)
+      subject.start_journey(start_st)
+      subject.end_journey(end_st)
       expect(subject.fare).to eq 1
     end
   end

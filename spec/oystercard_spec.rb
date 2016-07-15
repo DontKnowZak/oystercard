@@ -65,15 +65,17 @@ describe Oystercard do
         expect{ subject.touch_in(entry_station) }.to(raise_error("Card needs at least £#{min_amount} to touch in"))
       end
 
-      # it 'deducts minimum fare from balance' do 
+      # it 'deducts minimum fare from balance' do
       #   expect{card_with_money.touch_in(entry_station) }.to change{ card_with_money.balance}.by(-min_fare)
-      # end     
-    end   
+      # end
+    end
   end
 
   describe '#touch_out' do
     context '#touch_out should:' do
       it 'change @journey to false' do
+        allow(entry_station).to receive(:zone).and_return(1)
+        allow(exit_station).to receive(:zone).and_return(1)
         card_with_money.touch_in(entry_station)
         card_with_money.touch_out(exit_station)
         expect(card_with_money).not_to(be_in_journey)

@@ -1,3 +1,5 @@
+require_relative 'station'
+
 class Journey
 	# attr_reader :journey
 	MIN_FARE = 1
@@ -18,7 +20,14 @@ class Journey
 	end
 
 	def fare
-		return MIN_FARE if !entry_station.nil? && !exit_station.nil?
+		return zone_fare if !entry_station.nil? && !exit_station.nil?
 		return PENALTY_FARE
 	end
+
+private
+
+  def zone_fare
+    (@entry_station.zone - @exit_station.zone).abs + 1
+  end
+
 end

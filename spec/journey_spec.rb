@@ -4,6 +4,19 @@ describe Journey do
   describe '#initialization' do
     subject { described_class.new }
   end
+  let(:start_st) { double(:entry_station) }
+  let(:end_st) { double(:exit_station) }
+
+  def set_zone(zone0, zone1)
+    allow(start_st).to receive(:zone).and_return(zone0)
+    allow(end_st).to receive(:zone).and_return(zone1)
+    set_stations
+  end
+
+  def set_stations
+    subject.start_journey(start_st)
+    subject.end_journey(end_st)
+  end
 
   min_fare = Journey::MIN_FARE
   penalty_fare = Journey::PENALTY_FARE
@@ -43,20 +56,17 @@ describe Journey do
     end
 
     it 'is not in journey when journey is complete' do
-      subject.start_journey(:entry_station)
-      subject.end_journey(:exit_station)
+      set_stations
       expect(subject).not_to(be_in_journey)
     end
   end
 
   describe '#fare' do
+
     it { is_expected.to(respond_to(:fare)) }
 
-    it 'should return fare for completed journey' do
-      subject.start_journey(:start_station)
-      subject.end_journey(:end_station)
-      expect(subject.fare).to eq(min_fare)
-    end
+
+
 
     it 'should return penalty fare for incomplete journey' do
       subject.start_journey(:start_station)
@@ -66,7 +76,56 @@ describe Journey do
     it 'should return penalty fare for incomplete journey' do
       subject.end_journey(:end_station)
       expect(subject.fare).to eq(penalty_fare)
-    end  
+    end
+
+    context 'when travelling from zone 1 to zone 1' do
+      it 'returns a fair of 1' do
+        set_zone(1,1)
+        expect(subject.fare).to eq 1
+      end
+    end
+    context 'when travelling from zone 1 to zone 2' do
+      it 'returns a fair of 2' do
+        set_zone(1,2)
+        expect(subject.fare).to eq 2
+      end
+    end
+    context 'when travelling from zone 1 to zone 3' do
+      it 'returns a fair of 3' do
+        set_zone(1,3)
+        expect(subject.fare).to eq 3
+      end
+    end
+    context 'when travelling from zone 1 to zone 4' do
+      it 'returns a fair of 4' do
+        set_zone(1,4)
+        expect(subject.fare).to eq 4
+      end
+    end
+    context 'when travelling from zone 1 to zone 5' do
+      it 'returns a fair of 5' do
+        set_zone(1,5)
+        expect(subject.fare).to eq 5
+      end
+    end
+    context 'when travelling from zone 1 to zone 6' do
+      it 'returns a fair of 6' do
+        set_zone(1,6)
+        expect(subject.fare).to eq 6
+      end
+    end
+    context 'when travelling from zone 4 to zone 1' do
+      it 'returns a fair of 4' do
+        set_zone(4,1)
+        expect(subject.fare).to eq 4
+      end
+    end
+    context 'when travelling from zone 3 to zone 3' do
+      it 'returns a fair of 1' do
+        set_zone(3,3)
+        expect(subject.fare).to eq 1
+      end
+    end
   end
 
 end
