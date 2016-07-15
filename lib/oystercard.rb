@@ -52,4 +52,5 @@ class Oystercard
   def deduct_fare
     @balance -= @journeys.fare
   end
+  
 end
